@@ -154,3 +154,7 @@ Trucs à faire gaffe par la suite
 - attention au fil RSS, qu'il ne renvoit pas tous les articles depuis le début!!!
 - avoir une belle page pour les erreurs 404, car les anciennes URLs Spip ne fonctionneront plus, il faudra peut être expliqué que les URLs de la v2 ont été changées.
 
+Code source
+===========
+
+Si tu es curieux, le code sources est sur GitHub: [https://github.com/jletroui/tbz-migration](https://github.com/jletroui/tbz-migration).

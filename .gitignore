@@ -15,3 +15,4 @@ var
 .ant-targets-build.xml
 replaced_*.sql
 tbz_export*
+*.jar
