@@ -30,7 +30,7 @@ Ensuite, lorsque tu es prêt à vouloir vérifier avec le contenu de TribalZine,
 
 - D'abord, fais un export de ta base de donnée Wordpress de travail (celle ou tu as installer les plugins, le thème, etc...)
 - Tu lances la migration à partir de cet export dans une nouvelle base de donéé
-- Tu modifie la config Wordpress (wp-config.php) pour pointer sur la base migrée
+- Tu modifie la config Wordpress (`wp-config.php`) pour pointer sur la base migrée
 - Tu mattes le résultat, notes les trucs à changer
 - IMPORTANT: tu re modifie la config Wordpress pour pointer sur la base de donnée Wordpress de travail sans contenu
 - Tu fais les changements sur le thème, les plugins, etc...
@@ -53,7 +53,7 @@ Le jour J, préparation:
 A ce point ci, l'ancien site Spip est encore en ligne et accessible. Là commence la partie ou l'on va devoir être 'hors ligne' pendant qq minutes.
 
 - On ajoute un fichier `index.html` mitonné à la main annonçant en fanfare que le site web est en cours de migration. 
-- On ajoute un fichier `htaccess.txt` qui redirige n'importe quelle URL autre que 'index.html' vers 'index.html'. Lorsque l'on va sur 'www.tribalzine.com', on ne voit que le index.html.
+- On ajoute un fichier `htaccess.txt` qui redirige n'importe quelle URL autre que `index.html` vers `index.html`. Lorsque l'on va sur 'www.tribalzine.com', on ne voit que le `index.html`.
 - On supprimes tous les fichiers spip, cad tout sauf le répertoire `IMG`, le `htaccess.txt`, `index.html` et ses qq images.
 - On upload les fichiers Wordpress
 - On mets à jour le `wp-config.php` du site web pour pointer vers la nouvelle BD
@@ -121,7 +121,7 @@ Lancer une migration
 - Exporter la bd wordpress de travail dans le répertoire de migration. Par exemple dans `wp_dev.sql`.
 - Lancer l'export avec le fichier d'export spip et le fichier d'export de la bd wordpress de travail:
 
-    java -jar migrate-tbz.jar tbz_spip.sql wp_dev.sql
+    `java -jar migrate-tbz.jar tbz_spip.sql wp_dev.sql`
 
 - Patienter (ca prends un bon 5 min)
 - Modifier la config wordpress avec les infos suivantes:
@@ -134,7 +134,7 @@ Et voilà, tu peux aller admirer le résultat :).
 Explication des messages d'erreur:
 ----------------------------------
 
-Tu vas voir, il y a plein de petits glitchs lors d'une migration. Voici les explications.
+Tu vas voir, il y a plein de petits problèmes lors d'une migration. Voici les explications.
 
 
 `21:09:28.043 [main] ERROR tbz.PostMigrator - Cannot treat \[((?:[^-]|-[^>])*)\-\>http://www.tribalzine.com/\?([^\]]+)\] for post 2010 (SO)`
