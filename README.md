@@ -46,20 +46,20 @@ Le jour J, préparation:
 - On arrête de modifier le site Spip. Plus d'éditions jusqu'à ce que la migration soit complète.
 - On fait un export de la BD spip dans le répertoire de migration
 - On récupère un export de la dernière version de la BD Wordpress de travail (sur l'ordinateur de travail)
-- On lance la migration en local sur l'ordinateur de travail, avec la configuration finale (en particulier le paramètre 'website_url')
+- On lance la migration en local sur l'ordinateur de travail, avec la configuration finale (en particulier le paramètre `website_url`)
 - On exporte la BD migrée
 - On l'importe dans le MySQL du site web (une nouvelle BD, pas celle de Spip)
 
 A ce point ci, l'ancien site Spip est encore en ligne et accessible. Là commence la partie ou l'on va devoir être 'hors ligne' pendant qq minutes.
 
-- On ajoute un fichier 'index.html' mitonné à la main annonçant en fanfare que le site web est en cours de migration. 
-- On ajoute un fichier 'htaccess.txt' qui redirige n'importe quelle URL autre que 'index.html' vers 'index.html'. Lorsque l'on va sur 'www.tribalzine.com', on ne voit que le index.html.
-- On supprimes tous les fichiers spip, cad tout sauf le répertoire IMG, le 'htaccess.txt', 'index.html' et ses qq images.
+- On ajoute un fichier `index.html` mitonné à la main annonçant en fanfare que le site web est en cours de migration. 
+- On ajoute un fichier `htaccess.txt` qui redirige n'importe quelle URL autre que 'index.html' vers 'index.html'. Lorsque l'on va sur 'www.tribalzine.com', on ne voit que le index.html.
+- On supprimes tous les fichiers spip, cad tout sauf le répertoire `IMG`, le `htaccess.txt`, `index.html` et ses qq images.
 - On upload les fichiers Wordpress
-- On mets à jour le 'wp-config.php' du site web pour pointer vers la nouvelle BD
-- On remet un 'htaccess.txt' normal
+- On mets à jour le `wp-config.php` du site web pour pointer vers la nouvelle BD
+- On remet un `htaccess.txt` normal
 - On vérifie que le site web est tout beau
-- On supprime 'index.html'
+- On supprime `index.html`
 
 Et zou! C'est fait! Normalement, le site web n'aura été innaccessible que quelques minutes, le gros du temps aura été d'uploader les fichiers wordpress.
 
@@ -75,9 +75,9 @@ Il y a pas mal de trucs à installer sur l'ordinateur qui va servir à développ
 - Installer Java Runtime Environment 1.7
 - Installer MySQL et PHP
 - Installer Wordpress localement qq part et noter le nom de la base de donnée de travail dans MySQL (par exemple: tbz_dev)
-- Copier le répertoire 'IMG' de TribalZine à la racine du site Wordpress. Attention, c'est énorme, ca m'a pris 3 jours pour télécharger ca (~ 60 Go). Conseil: utiliser rsync, histoire de n'avoir qu'à synchroniser les nouvelles images régulièrement sans se retaper le téléchargement au complet. 
+- Copier le répertoire `IMG` de TribalZine à la racine du site Wordpress. Attention, c'est énorme, ca m'a pris 3 jours pour télécharger ca (~ 60 Go). Conseil: utiliser [rsync](https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps), histoire de n'avoir qu'à synchroniser les nouvelles images régulièrement sans se retaper le téléchargement au complet. 
 - Faire un export de la base de donnée Spip du site TribalZine au format .sql dans le répertoire de migration (par exemple: `tbz_spip.sql`)
-- Ouvrir le fichier `migration.conf` et ajuster les paramètres si besoin. Probablement le seul paramètre à changer est 'website_url'.
+- Ouvrir le fichier `migration.conf` et ajuster les paramètres si besoin. Probablement le seul paramètre à changer est `website_url`.
 - Ouvrir une ligne de commande dans le répertoire de migration
 
 Voilà, après tout ça, on est prêt à migrer autant de fois que l'on veut.
@@ -109,11 +109,11 @@ Sinon, cela veut probablement dire que Java 1.7 n'est pas correctement installé
 Explication des fichiers
 ------------------------
 
-- README.md: la documentation que tu es en train de lire
-- migrate-tbz.conf: la configuration de la migration
-- migrate-tbz.jar: l'outil de migration
-- wordpress_fresh_noplugins.sql: exemple d'export d'un site Wordpress de travail complètement vide
-- tbz_export_2014-09-08.sql: exemple d'export de la BD Spip de TribalZine
+- `README.md`: la documentation que tu es en train de lire
+- `migrate-tbz.conf`: la configuration de la migration
+- `migrate-tbz.jar`: l'outil de migration
+- `wordpress_fresh_noplugins.sql`: exemple d'export d'un site Wordpress de travail complètement vide
+- `tbz_export_2014-09-08.sql`: exemple d'export de la BD Spip de TribalZine
 
 Lancer une migration
 --------------------
@@ -122,12 +122,12 @@ Lancer une migration
 - Lancer l'export avec le fichier d'export spip et le fichier d'export de la bd wordpress de travail:
 
     java -jar migrate-tbz.jar tbz_spip.sql wp_dev.sql
-    
+
 - Patienter (ca prends un bon 5 min)
 - Modifier la config wordpress avec les infos suivantes:
-  - DB_USER: tbz
-  - DB_PASSWORD: tbzpwd
-  - DB_NAME: tbz_wp_migrated
+  - `DB_USER`: tbz
+  - `DB_PASSWORD`: tbzpwd
+  - `DB_NAME`: tbz_wp_migrated
   
 Et voilà, tu peux aller admirer le résultat :).  
 
@@ -137,14 +137,14 @@ Explication des messages d'erreur:
 Tu vas voir, il y a plein de petits glitchs lors d'une migration. Voici les explications.
 
 
-21:09:28.043 [main] ERROR tbz.PostMigrator - Cannot treat \[((?:[^-]|-[^>])*)\-\>http://www.tribalzine.com/\?([^\]]+)\] for post 2010 (SO)
+`21:09:28.043 [main] ERROR tbz.PostMigrator - Cannot treat \[((?:[^-]|-[^>])*)\-\>http://www.tribalzine.com/\?([^\]]+)\] for post 2010 (SO)`
 Pas réussi à analyser l'article (ca fait un stack overflow, ou SO). Il faut vérifier cet article à la main.
 
-java.lang.Exception: Cannot find internal link for Danny-Macaskill-a-la-Une-de-Trial in [la Une de Trial Mag' ->http://www.tribalzine.com/?Danny-Macaskill-a-la-Une-de-Trial] for post 4372
+`java.lang.Exception: Cannot find internal link for Danny-Macaskill-a-la-Une-de-Trial in [la Une de Trial Mag' ->http://www.tribalzine.com/?Danny-Macaskill-a-la-Une-de-Trial] for post 4372`
 Réussi à analyser l'article, mais pas trouvé le lien dans la base spip. Probablement un article qui fut supprimé par la suite. Il faut corriger cet article à la main, soit en retrouvant l'article, soit en supprimant le lien.
 Note: peut se fixer d'avance directement dans SPIP (le numéro d'article est le bon jusqu'à 6000, ensuite c'est les brèves, il faut enlever 6000 au numéro du post pour trouver l'id de la brève)
 
-21:09:25.309 [main] WARN  tbz.PostMigrator - Cannot found attachment for spip tag <img10473|center> in post 839. Image will not be displayed.
+`21:09:25.309 [main] WARN  tbz.PostMigrator - Cannot found attachment for spip tag <img10473|center> in post 839. Image will not be displayed.`
 Ah, ben on a pas trouvé le document spip en question. Il a probablement été supprimé à un moment. Il faut corriger cet article à la main (probablement en supprimant l'image).
 Note: peut se fixer d'avance directement dans SPIP (le numéro d'article est le bon jusqu'à 6000, ensuite c'est les brèves, il faut enlever 6000 au numéro du post pour trouver l'id de la brève)
 

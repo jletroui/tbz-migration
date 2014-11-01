@@ -16,3 +16,4 @@ var
 replaced_*.sql
 tbz_export*
 *.jar
+*.zip
