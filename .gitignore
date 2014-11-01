@@ -1,0 +1,17 @@
+etc/live*
+etc/*.override
+etc/README*
+build
+bin
+doc
+out
+target
+project/project
+logs
+var
+.idea*
+*.iml
+.DS_Store
+.ant-targets-build.xml
+replaced_*.sql
+tbz_export*
