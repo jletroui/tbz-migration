@@ -6,7 +6,7 @@ SET option_value='@UPLOAD_DIR@'
 WHERE option_name='upload_path';
 
 -- Imports authors (only one real author, so just adjust admin user)
-UPDATE wp_users
+UPDATE @PREFIX@users
 SET
     user_login='Jebegood',
     user_nicename='Jebegood',
@@ -15,7 +15,7 @@ SET
 WHERE ID=1;
 
 -- Imports categories (from rubriques)
-REPLACE INTO wp_terms (
+REPLACE INTO @PREFIX@terms (
     term_id,
     name,
     slug,
@@ -28,7 +28,7 @@ SELECT
     1
 FROM
     @SPIP_DB@.spip_rubriques;
-REPLACE INTO wp_term_taxonomy (
+REPLACE INTO @PREFIX@term_taxonomy (
     term_taxonomy_id,
     term_id,
     taxonomy,
@@ -45,13 +45,13 @@ FROM
     @SPIP_DB@.spip_rubriques;
 
 -- Update category urls
-UPDATE wp_terms, @SPIP_DB@.spip_urls
+UPDATE @PREFIX@terms, @SPIP_DB@.spip_urls
 SET slug = @SPIP_DB@.spip_urls.url
 WHERE @SPIP_DB@.spip_urls.id_objet = term_id
 AND @SPIP_DB@.spip_urls.type = "rubrique";
 
 -- Import posts (articles in spip)
-REPLACE INTO wp_posts (
+REPLACE INTO @PREFIX@posts (
     ID
     , post_author
     , post_date, post_date_gmt
@@ -83,7 +83,7 @@ FROM
   LEFT JOIN @SPIP_DB@.spip_urls AS l ON l.id_objet = p.id_article AND l.type = 'article';
  
 -- Import news (breves in spip)
-REPLACE INTO wp_posts (
+REPLACE INTO @PREFIX@posts (
     ID
     , post_author
     , post_date,
@@ -121,7 +121,7 @@ FROM
   LEFT JOIN @SPIP_DB@.spip_urls AS l ON l.id_objet = b.id_breve AND l.type = 'breve';
 
 -- Link posts to terms
-REPLACE INTO wp_term_relationships (
+REPLACE INTO @PREFIX@term_relationships (
     object_id,
     term_taxonomy_id
 )
@@ -132,7 +132,7 @@ FROM
     @SPIP_DB@.spip_articles AS p;
 
 -- Link news to terms
-REPLACE INTO wp_term_relationships (
+REPLACE INTO @PREFIX@term_relationships (
     object_id,
     term_taxonomy_id
 )
@@ -143,11 +143,11 @@ FROM
     @SPIP_DB@.spip_breves AS b;
 
 -- Update all the counts for the categories
-UPDATE wp_term_taxonomy tt
+UPDATE @PREFIX@term_taxonomy tt
 SET count=(SELECT COUNT(1) FROM wp_term_relationships rel WHERE rel.term_taxonomy_id = tt.term_taxonomy_id);
 
 -- Import images and other attached files (documents in spip)
-INSERT INTO wp_posts (
+INSERT INTO @PREFIX@posts (
     ID,
     post_author,
     post_date,
@@ -187,7 +187,7 @@ FROM
 WHERE
   d.extension != 'html';
 
-INSERT INTO wp_postmeta (
+INSERT INTO @PREFIX@postmeta (
     meta_id,
     post_id,
     meta_key,
@@ -204,7 +204,7 @@ WHERE
   d.extension != 'html';
 
 -- Import comments (forum in spip)
-REPLACE INTO wp_comments (
+REPLACE INTO @PREFIX@comments (
       comment_ID
     , comment_post_ID
     , comment_author
@@ -233,17 +233,17 @@ WHERE
     statut = 'publie';
 
 -- Update comments numbers per post
-UPDATE wp_posts p
+UPDATE @PREFIX@posts p
 SET p.comment_count = (SELECT COUNT(1) FROM wp_comments c WHERE c.comment_post_ID = p.ID);
  
 -- Update the syntax. Basically transform weird SPIP stuff into HTML
-update wp_posts set post_content = replace(post_content, '{{{', ' <h1> ') where instr(post_content, '{{{') > 0;
-update wp_posts set post_content = replace(post_content, '}}}', ' </h1> ') where instr(post_content, '}}}') > 0;
-update wp_posts set post_content = replace(post_content, '{{', ' <b> ') where instr(post_content, '{{') > 0;
-update wp_posts set post_content = replace(post_content, '}}', ' </b> ') where instr(post_content, '}}') > 0;
-update wp_posts set post_content = replace(post_content, '{', ' <i> ') where instr(post_content, '{') > 0;
-update wp_posts set post_content = replace(post_content, '}', ' </i> ') where instr(post_content, '}') > 0;
-update wp_posts set post_content = replace(post_content, '[[', ' <blockquote> ') where instr(post_content, '[[') > 0;
-update wp_posts set post_content = replace(post_content, ']]', ' </blockquote> ') where instr(post_content, ']]') > 0;
-update wp_posts set post_content = replace(post_content, '*]', ' </strong></i> ') where instr(post_content, '*]') > 0;
-update wp_posts set post_content = replace(post_content, '[*', ' </strong></i> ') where instr(post_content, '*]') > 0;
+update @PREFIX@posts set post_content = replace(post_content, '{{{', ' <h1> ') where instr(post_content, '{{{') > 0;
+update @PREFIX@posts set post_content = replace(post_content, '}}}', ' </h1> ') where instr(post_content, '}}}') > 0;
+update @PREFIX@posts set post_content = replace(post_content, '{{', ' <b> ') where instr(post_content, '{{') > 0;
+update @PREFIX@posts set post_content = replace(post_content, '}}', ' </b> ') where instr(post_content, '}}') > 0;
+update @PREFIX@posts set post_content = replace(post_content, '{', ' <i> ') where instr(post_content, '{') > 0;
+update @PREFIX@posts set post_content = replace(post_content, '}', ' </i> ') where instr(post_content, '}') > 0;
+update @PREFIX@posts set post_content = replace(post_content, '[[', ' <blockquote> ') where instr(post_content, '[[') > 0;
+update @PREFIX@posts set post_content = replace(post_content, ']]', ' </blockquote> ') where instr(post_content, ']]') > 0;
+update @PREFIX@posts set post_content = replace(post_content, '*]', ' </strong></i> ') where instr(post_content, '*]') > 0;
+update @PREFIX@posts set post_content = replace(post_content, '[*', ' </strong></i> ') where instr(post_content, '*]') > 0;

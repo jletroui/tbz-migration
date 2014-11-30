@@ -46,7 +46,8 @@ object MigrateToWordpress extends App with Logging {
       "@SPIP_DB@" -> spipDbName,
       "@UPLOAD_DIR@" -> uploadLocation,
       "@ATTACHMENT_ID_OFFSET@" -> attachmentIdOffset.toString,
-      "@NEWS_ID_OFFSET@" -> newsIdOffset.toString)
+      "@NEWS_ID_OFFSET@" -> newsIdOffset.toString,
+      "@PREFIX@" -> wpPrefix)
 
     log.info("  Reseting wp & spip databases...")
     require((new File(setupScript) #> mysqlCmd !) == 0, "Recreating wp & spip databases failed...")
@@ -102,12 +103,12 @@ object MigrateToWordpress extends App with Logging {
       id <- Range(0, 10000, batchSize)
     } {
       log.info(s"    Fixing posts $id to ${id + batchSize}...")
-      val posts = wpDb.queryEach(s"select ID, post_content from wp_posts where ID > ? AND ID <= ?", id, id + batchSize) { rs =>
+      val posts = wpDb.queryEach(s"select ID, post_content from ${wpPrefix}posts where ID > ? AND ID <= ?", id, id + batchSize) { rs =>
         Post(rs.getInt("ID"), rs.getString("post_content"))
       }
       posts.foreach { post =>
         val fixedContent = migrator.migrate(post)
-        wpDb.update("UPDATE wp_posts SET post_content=? WHERE ID=?", fixedContent, post.id)
+        wpDb.update(s"UPDATE ${wpPrefix}posts SET post_content=? WHERE ID=?", fixedContent, post.id)
       }
     }
 
