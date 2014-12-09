@@ -1,7 +1,7 @@
 -- Inspiration: http://contrib.spip.net/Export-Spip-vers-Wordpress (mais très incomplet)
 
 -- http://codex.wordpress.org/Function_Reference/wp_upload_dir
-UPDATE wp_options
+UPDATE @PREFIX@options
 SET option_value='@UPLOAD_DIR@'
 WHERE option_name='upload_path';
 
@@ -144,7 +144,7 @@ FROM
 
 -- Update all the counts for the categories
 UPDATE @PREFIX@term_taxonomy tt
-SET count=(SELECT COUNT(1) FROM wp_term_relationships rel WHERE rel.term_taxonomy_id = tt.term_taxonomy_id);
+SET count=(SELECT COUNT(1) FROM @PREFIX@term_relationships rel WHERE rel.term_taxonomy_id = tt.term_taxonomy_id);
 
 -- Import images and other attached files (documents in spip)
 INSERT INTO @PREFIX@posts (
@@ -234,7 +234,7 @@ WHERE
 
 -- Update comments numbers per post
 UPDATE @PREFIX@posts p
-SET p.comment_count = (SELECT COUNT(1) FROM wp_comments c WHERE c.comment_post_ID = p.ID);
+SET p.comment_count = (SELECT COUNT(1) FROM @PREFIX@comments c WHERE c.comment_post_ID = p.ID);
  
 -- Update the syntax. Basically transform weird SPIP stuff into HTML
 update @PREFIX@posts set post_content = replace(post_content, '{{{', ' <h1> ') where instr(post_content, '{{{') > 0;

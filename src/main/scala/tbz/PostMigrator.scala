@@ -35,7 +35,7 @@ class PostMigrator(spipIdToAttachment: Map[Int, Attachment], spipAliasToInternal
 
           s"<a href='$url'${titleAttr(title)}><img src='$url' ${sizeAttr(size)} alt='$title' title='$title' class='align$finalAlign wp-image-$wpId' /></a>"
         case None =>
-          log.warn(s"    Cannot found attachment for spip tag ${m.group(0)} in post ${p.id}. Image will not be displayed.")
+          log.warn(s"    Cannot find attachment for spip tag ${m.group(0)} in post ${p.id}. Image will not be displayed.")
           m.group(0)
       }
     }
@@ -52,7 +52,7 @@ class PostMigrator(spipIdToAttachment: Map[Int, Attachment], spipAliasToInternal
 
           s"<a href='$url'${titleAttr(title)}><img src='$url' ${sizeAttr(size)} alt='$title' title='$title' class='alignnone wp-image-$wpId' /></a>"
         case None =>
-          log.warn(s"    Cannot found attachment for spip tag ${m.group(0)} in post ${p.id}. Image will not be displayed.")
+          log.warn(s"    Cannot find attachment for spip tag ${m.group(0)} in post ${p.id}. Image will not be displayed.")
           m.group(0)
       }
     }
@@ -69,7 +69,7 @@ class PostMigrator(spipIdToAttachment: Map[Int, Attachment], spipAliasToInternal
 
           s"<a href='$url'${titleAttr(title)}><img src='$url' width='$width' height='$heigh' alt='$title' title='$title' class='align$align wp-image-$wpId' /></a>"
         case None =>
-          log.warn(s"    Cannot found attachment for spip tag ${m.group(0)} in post ${p.id}. Image will not be displayed.")
+          log.warn(s"    Cannot find attachment for spip tag ${m.group(0)} in post ${p.id}. Image will not be displayed.")
           m.group(0)
       }
     }
