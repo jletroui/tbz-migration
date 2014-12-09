@@ -91,9 +91,28 @@ object MigrateToWordpress extends App with Logging {
         rs.getInt("id_objet"))
     }
 
-    internalLinks
+    val objectNamesIndex = internalLinks
       .map(il => il.alias -> il)
       .toMap
+
+    val artDirectRegex = """art(?:icle)?(\d+)""".r
+    def articleDirectIdReference(alias: String) =
+      artDirectRegex
+        .findFirstMatchIn(alias)
+        .map(m => InternalLink(alias, "article", m.group(1).toInt))
+
+    val artIndirectRegex = """[^,]+,(\d+)""".r
+    def articleIndirectIdReference(alias: String) =
+      artIndirectRegex
+        .findFirstMatchIn(alias)
+        .map(m => InternalLink(alias, "article", m.group(1).toInt))
+
+    (alias: String, postId: Int) => {
+      objectNamesIndex.get(alias) // It's a well identified name / url
+        .orElse(articleDirectIdReference(alias)) // It's a generic article id, like 'art1549' or 'article1549'.
+        .orElse(articleIndirectIdReference(alias)) // It's an indirect reference, like 'K-124-Days-2009-1ste-manche,1523'
+        .getOrElse(throw new Exception(s"Cannot find internal link for link '->$alias' in post $postId"))
+    }
   }
 
   def fixPosts(wpDb: DB, migrator: PostMigrator): Unit = {

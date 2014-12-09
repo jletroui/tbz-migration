@@ -2,7 +2,7 @@ package tbz
 
 import scala.util.matching.Regex.Match
 
-class PostMigrator(spipIdToAttachment: Map[Int, Attachment], spipAliasToInternalLink: Map[String, InternalLink]) extends Logging {
+class PostMigrator(spipIdToAttachment: Map[Int, Attachment], spipAliasToInternalLink: (String, Int) => InternalLink) extends Logging {
   import tbz.TbzConfig._
 
   def migrate(post: Post) =
@@ -97,9 +97,7 @@ class PostMigrator(spipIdToAttachment: Map[Int, Attachment], spipAliasToInternal
     def replaceBy(m: Match, p: Post) = {
       val text = m.group(1)
       val articleAlias = cleanAlias(m.group(2))
-      val internalLink = spipAliasToInternalLink
-        .getOrElse(articleAlias, throw new Exception(s"Cannot find internal link for $articleAlias in ${m.group(0)} for post ${p.id}"))
-      val target = internalLink match {
+      val target = spipAliasToInternalLink(articleAlias, p.id) match {
         case InternalLink(_, "article", id) => s"$websiteUrl/?p=$id"
         case InternalLink(_, "auteur", id) => s"$websiteUrl/?author=$id"
         case InternalLink(_, "breve", id) => s"$websiteUrl/?p=${id + newsIdOffset}"
