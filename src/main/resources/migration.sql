@@ -73,7 +73,7 @@ SELECT
     , concat(p.chapo, p.texte)
     , ''
     , titre
-    , COALESCE(REPLACE(l.url, ' ', ''), CONCAT('art', p.id_article))
+    , COALESCE(REPLACE(REPLACE(l.url, ' ', ''), ',', '-'), CONCAT('art', p.id_article))
     , '', ''
     , p.date_modif,
     p.date_modif,
